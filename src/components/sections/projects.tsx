@@ -34,6 +34,25 @@ export function Projects() {
                 <span>{project.outcome}</span>
               </p>
 
+              {project.highlights && project.highlights.length > 0 && (
+                <ul className="mt-6 space-y-3 border-t border-border pt-6">
+                  {project.highlights.map((h) => (
+                    <li
+                      key={h.slice(0, 32)}
+                      className="flex gap-3 text-sm leading-relaxed text-muted"
+                    >
+                      <span
+                        aria-hidden
+                        className="mt-px shrink-0 font-mono text-dim"
+                      >
+                        —
+                      </span>
+                      <span>{h}</span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+
               {project.stack.length > 0 && (
                 <ul className="mt-6 flex flex-wrap gap-2">
                   {project.stack.map((tech) => (

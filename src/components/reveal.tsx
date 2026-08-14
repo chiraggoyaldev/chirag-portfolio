@@ -20,6 +20,10 @@ export function Reveal({
   return (
     <motion.div
       className={className}
+      // Motion server-renders `initial` as an inline opacity:0, so without JS
+      // every revealed section would be invisible. The `data-reveal` hook lets
+      // the <noscript> rule in the root layout force these back to visible.
+      data-reveal=""
       initial={{ opacity: 0, y: 14 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-72px" }}

@@ -69,6 +69,8 @@ export type Project = {
   kind: string;
   blurb: string;
   outcome: string;
+  /** Specific engineering problems solved. Optional — omit for smaller projects. */
+  highlights?: string[];
   stack: string[];
   links: ProjectLink[];
 };
@@ -146,8 +148,10 @@ export const experience: Job[] = [
     highlights: [
       "Joined through a structured training period, then moved onto client delivery.",
       "Five months on trademarks411.com, where I built Rails automation driving the trademark office's filing system through a headless browser with Selenium and Watir — submitting new applications, Statements of Use and renewals without manual form entry. Contributed roughly a fifth of that codebase.",
-      "Six months (current) on NetGym, a staff-scheduling platform used by gyms and fitness chains — working across a Next.js frontend, a Rails service and Python serverless functions on AWS.",
-      "Contributed to a phased migration of NetGym's legacy Rails-rendered frontend onto a modern Next.js app, with systematic parity checks so existing customers saw no regressions.",
+      "Six months (current) on NetGym, a multi-tenant scheduling platform for gym chains — working across a Next.js frontend, a Rails monolith, a GraphQL layer and Python serverless functions on AWS.",
+      "Migrated seven settings modules and a six-tab profile area off the Rails monolith onto Next.js while both frontends served live traffic against a single database, with no cutover window — including the coordination that stops two stacks firing the same side effect.",
+      "Debugged and fixed production concurrency faults: lost updates under parallel event delivery, a sync deadlocking itself by holding transactions open across external HTTP calls, and duplicate rows under concurrent submission.",
+      "Hardened multi-tenant authorization — permission gates, server-side tenancy verification, role-scoped exports, and removal of unguarded legacy write endpoints.",
       "Audited and retired dead API endpoints across the legacy codebase, establishing which routes still carried live traffic before removing them.",
       "Built internal MCP servers connecting the team's development tooling, so project context could be queried directly.",
     ],
@@ -156,8 +160,15 @@ export const experience: Job[] = [
 
 /* --------------------------------------------------------------------------
    PROJECTS
-   NOTE: NetGym is proprietary. Prose only — no code, no screenshots, no
-   internal ticket IDs, no customer data. Do not add assets here.
+
+   NOTE: NetGym is a client's proprietary system. Prose only — no code, no
+   screenshots, no internal ticket IDs, no dated incidents, no named customers
+   or integration vendors, no internal codebase metrics. Do not add assets.
+
+   The bar for anything written here: it should describe a problem solved and
+   the technique used, in terms that would be recognisable to any engineer —
+   not serve as a blueprint of how the client's system is built. If a line
+   would help a competitor understand their architecture, it does not belong.
    -------------------------------------------------------------------------- */
 
 export const projects: Project[] = [
@@ -165,16 +176,30 @@ export const projects: Project[] = [
     name: "NetGym",
     kind: "Client project · via Beryl Systems · under NDA",
     blurb:
-      "Staff scheduling and shift-coverage platform for gyms and fitness chains. Instructors request cover for a shift, managers approve it, and the whole roster stays in sync in realtime across web and mobile.",
+      "Multi-tenant SaaS for gym chains — staff scheduling, shift coverage, substitute requests, training, documentation and time clock. Tenants are isolated by subdomain, each integrated with one of eleven third-party gym-management systems.",
     outcome:
-      "Around 120 tickets shipped to date — feature work, QA fixes and migration parity checks — on a platform fitness chains schedule staff with every day.",
+      "Migrated seven settings modules and a six-tab profile area from a Rails monolith onto Next.js with both frontends serving production traffic against one database — no cutover window, no downtime. Around 120 tickets shipped to date.",
+    // Problems and techniques, deliberately not architecture documentation.
+    // Nothing here names a customer, an integration vendor, an internal ticket
+    // or a dated incident. See the NOTE above before adding to this list.
+    highlights: [
+      "Held one invariant across the whole migration: any single user action is served entirely by the old stack or entirely by the new one, so no request can half-succeed across a system boundary.",
+      "Kept duplicated side effects from double-firing while both stacks read the same database — ownership flags let exactly one system own each callback, with a database-level trigger standing down when the legacy models intend to own a cascade themselves.",
+      "Traced silently dropped records to concurrent event deliveries clobbering each other in a read-modify-write, with no atomic append available to serialise them. Replaced it with a compare-and-swap retry loop — jittered backoff, bounded attempts, hard deadline.",
+      "Fixed a sync that deadlocked itself by making external HTTP calls inside open database transactions until the connection pool ran dry. Split it into concurrent fetches then sequential writes, moving all network I/O off the transaction path, and batched failure alerts that had been tripping rate limits.",
+      "Hardened multi-tenant authorization: permission gates and role-rank checks on user management, tenancy re-verified server-side instead of trusted from the client, role scoping extended to CSV export so a scoped user cannot export rows they cannot see, and unguarded legacy write endpoints deleted rather than left reachable.",
+      "Enforced uniqueness under concurrent submission with a partial unique index and graceful constraint handling, rather than a check-then-insert that cannot hold under load.",
+      "Shipped net-new product work alongside the migration, including an e-signature flow for employment documentation — templated PDFs, acknowledgement and approval requirements, reminders, and auto-assignment for new staff.",
+    ],
     stack: [
       "Next.js 15",
       "React 19",
       "TypeScript",
       "Tailwind CSS",
       "GraphQL",
+      "Hasura",
       "Ruby on Rails",
+      "PostgreSQL",
       "Python",
       "AWS",
       "Ably",
