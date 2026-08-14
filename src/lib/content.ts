@@ -25,7 +25,7 @@ export const site = {
 
   socials: {
     github: "https://github.com/chiraggoyaldev",
-    linkedin: "https://linkedin.com/in/TODO", // TODO: your LinkedIn handle
+    linkedin: "https://www.linkedin.com/in/chirag-goyal-a987503a4/",
     x: "", // optional — leave empty to hide
   },
 
@@ -122,6 +122,7 @@ export const skills: SkillGroup[] = [
     group: "Practices",
     items: [
       "Legacy migration",
+      "Browser automation",
       "Realtime (WebSockets / Ably)",
       "Observability",
       "Git / code review",
@@ -145,7 +146,7 @@ export const experience: Job[] = [
       "Full-stack delivery on client platforms — a staff-scheduling product for fitness chains, and a trademark filing service.",
     highlights: [
       "Joined through a structured training period, then moved onto client delivery.",
-      "Five months on trademarks411.com, a trademark search and filing platform. TODO: what did you build there, in what stack, and anything measurable?",
+      "Five months on trademarks411.com, where I built Rails automation that drives the trademark office's filing system through a headless browser — submitting new applications, Statements of Use and renewals without manual form entry. Contributed roughly a fifth of that codebase.",
       "Six months (current) on NetGym, a staff-scheduling platform used by gyms and fitness chains — working across a Next.js frontend, a Rails service and Python serverless functions on AWS.",
       "Contributed to a phased migration of NetGym's legacy Rails-rendered frontend onto a modern Next.js app, with systematic parity checks so existing customers saw no regressions.",
       "Audited and retired dead API endpoints across the legacy codebase, establishing which routes still carried live traffic before removing them.",
@@ -187,11 +188,20 @@ export const projects: Project[] = [
   {
     name: "trademarks411.com",
     kind: "Client project · via Beryl Systems",
-    // TODO: rewrite in your own words — what does it do, and what did you own?
     blurb:
-      "TODO: describe the platform and, specifically, which parts you built.",
-    outcome: "TODO: one concrete outcome.",
-    stack: [], // TODO: the actual stack you used here
+      "Trademark search and filing service. I built server-side automation in Rails that drives the trademark office's online filing system through a headless browser — completing and submitting filings end to end with no operator at a keyboard, across several filing types including new applications, Statements of Use and renewals.",
+    // Derived from what the work actually did. A number would be stronger:
+    // TODO: filings automated per week, hours saved, or error rate before/after.
+    outcome:
+      "Replaced per-filing manual form entry with an unattended pipeline covering multiple filing types; contributed roughly a fifth of the platform's codebase.",
+    // TODO: which automation gem — Capybara + Selenium, Watir, Ferrum? And the
+    // database, if you want it listed.
+    stack: [
+      "Ruby on Rails",
+      "Ruby",
+      "Headless browser automation",
+      "Background jobs",
+    ],
     links: [{ label: "Live site", href: "https://trademarks411.com" }],
   },
 ];
