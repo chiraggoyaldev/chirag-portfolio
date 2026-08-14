@@ -1,36 +1,50 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Portfolio
 
-## Getting Started
+Personal portfolio and freelance site. Dark, terminal-flavoured, single page.
 
-First, run the development server:
+**Stack:** Next.js 16 (App Router) · React 19 · TypeScript · Tailwind CSS 4 · Motion · cmdk
+
+## Develop
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev      # http://localhost:3000
+npm run build    # production build (fully static)
+npx tsc --noEmit # typecheck
+npx eslint src   # lint
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Editing content
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+All copy lives in **`src/lib/content.ts`** — name, tagline, skills, experience,
+projects, services, links. Components read from it, so nothing needs editing in
+JSX to change what the site says.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Section order, headings and the shell commands shown above each one come from
+**`src/lib/sections.ts`**. The nav, the ⌘K palette and the page all read from
+that one array, so they cannot drift apart.
 
-## Learn More
+Outstanding placeholders:
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+grep -rn "TODO:" src/
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Design tokens
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Every colour, spacing step and easing curve is defined once in the `@theme`
+block at the top of **`src/app/globals.css`**. Components use tokens only —
+adding a hard-coded hex or a second easing curve is what makes a phased build
+start looking phased, so don't.
 
-## Deploy on Vercel
+Dark-only by deliberate choice: one surface, tuned properly, rather than two
+tuned adequately.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Notes
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `src/app/opengraph-image.tsx` generates the social preview card at build time.
+  It runs through Satori, which supports flexbox but **not** grid, and requires
+  an explicit `display` on any element with more than one child.
+- Motion is gated on `prefers-reduced-motion` globally in `globals.css`.
+- The typing animation in the hero only animates opacity; all text is in the
+  server-rendered HTML from first paint, for crawlers and screen readers.

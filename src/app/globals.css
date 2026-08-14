@@ -1,26 +1,159 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* ==========================================================================
+   DESIGN TOKENS — the single source of truth.
+   Every color, space, size and easing on this site comes from here.
+   Never hard-code a value in a component; add a token instead.
+   ========================================================================== */
+
+@theme {
+  /* --- surfaces (dark only, by design) --- */
+  --color-bg: #0a0a0a;
+  --color-surface: #101010;
+  --color-surface-2: #161616;
+  --color-border: #1e1e1e;
+  --color-border-hi: #2c2c2c;
+
+  /* --- text --- */
+  --color-text: #ededed;
+  --color-muted: #8f8f8f;
+  --color-dim: #5a5a5a;
+
+  /* --- accent: one colour, used sparingly --- */
+  --color-accent: #4ade80;
+  --color-accent-hi: #86efac;
+  --color-accent-dim: #22c55e;
+
+  /* --- one easing curve, everywhere --- */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* --- motion --- */
+  --animate-blink: blink 1.1s steps(2, start) infinite;
+  --animate-fade-up: fade-up 0.6s var(--ease-out-expo) both;
+  --animate-scan: scan 8s linear infinite;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@keyframes blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
   }
 }
 
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes scan {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(100vh);
+  }
+}
+
+/* ==========================================================================
+   BASE
+   ========================================================================== */
+
+html {
+  scroll-behavior: smooth;
+  /* offset anchor targets so the fixed nav never covers a heading */
+  scroll-padding-top: 6rem;
+  color-scheme: dark;
+}
+
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Faint engineering grid — reads as "terminal" without shouting. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(to right, rgb(255 255 255 / 0.022) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(255 255 255 / 0.022) 1px, transparent 1px);
+  background-size: 56px 56px;
+  mask-image: radial-gradient(ellipse 100% 60% at 50% 0%, #000 40%, transparent 100%);
+}
+
+::selection {
+  background-color: var(--color-accent);
+  color: #04140a;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* Thin, dark scrollbar so the chrome doesn't break the surface. */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border-hi) transparent;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ==========================================================================
+   UTILITIES
+   ========================================================================== */
+
+/* Small-caps mono label for section numbers and category tags. */
+@utility label {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.75rem;
+  line-height: 1;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* Same size and rhythm as `label`, but case-preserving — for anything that is
+   literal shell text. Uppercased commands read as wrong to the developers this
+   design is aimed at, so `$ ls skills/` must stay lowercase. */
+@utility label-cmd {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.75rem;
+  line-height: 1;
+  letter-spacing: 0.06em;
+}
+
+/* Accent text glow, used only on the hero name and the blinking cursor. */
+@utility glow-accent {
+  text-shadow: 0 0 24px color-mix(in oklab, var(--color-accent) 45%, transparent);
 }
