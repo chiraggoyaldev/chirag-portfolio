@@ -17,7 +17,7 @@ export const site = {
   // on the page.
   tagline:
     "I build production web and mobile products — React and Next.js on the front, Python, Node and Rails behind them.",
-  location: "India", // TODO: city, or delete if you'd rather not say
+  location: "Faridabad, India",
   availability: "Available for freelance work",
 
   // Personal address, matching the GitHub account and this repo's commits.
@@ -29,9 +29,10 @@ export const site = {
     x: "", // optional — leave empty to hide
   },
 
-  // TODO: set once deployed, e.g. "https://chiraggoyal.dev".
-  // Used for canonical URLs, OG tags and the sitemap.
-  url: "https://TODO.vercel.app",
+  // Canonical URL — drives canonical tags, OG tags, robots.txt and the sitemap.
+  // Update this first if a custom domain is ever added, or search engines will
+  // keep pointing at the old one.
+  url: "https://chirag-portfolio-ten-beige.vercel.app",
 } as const;
 
 /* --------------------------------------------------------------------------
@@ -122,7 +123,7 @@ export const skills: SkillGroup[] = [
     group: "Practices",
     items: [
       "Legacy migration",
-      "Browser automation",
+      "Browser automation (Selenium / Watir)",
       "Realtime (WebSockets / Ably)",
       "Observability",
       "Git / code review",
@@ -139,14 +140,12 @@ export const experience: Job[] = [
   {
     company: "Beryl Systems",
     role: "Software Engineer",
-    // TODO: confirm the start month. 15 months as of August 2026 puts it
-    // around May 2025.
-    period: "May 2025 — Present",
+    period: "June 2025 — Present",
     summary:
       "Full-stack delivery on client platforms — a staff-scheduling product for fitness chains, and a trademark filing service.",
     highlights: [
       "Joined through a structured training period, then moved onto client delivery.",
-      "Five months on trademarks411.com, where I built Rails automation that drives the trademark office's filing system through a headless browser — submitting new applications, Statements of Use and renewals without manual form entry. Contributed roughly a fifth of that codebase.",
+      "Five months on trademarks411.com, where I built Rails automation driving the trademark office's filing system through a headless browser with Selenium and Watir — submitting new applications, Statements of Use and renewals without manual form entry. Contributed roughly a fifth of that codebase.",
       "Six months (current) on NetGym, a staff-scheduling platform used by gyms and fitness chains — working across a Next.js frontend, a Rails service and Python serverless functions on AWS.",
       "Contributed to a phased migration of NetGym's legacy Rails-rendered frontend onto a modern Next.js app, with systematic parity checks so existing customers saw no regressions.",
       "Audited and retired dead API endpoints across the legacy codebase, establishing which routes still carried live traffic before removing them.",
@@ -167,10 +166,8 @@ export const projects: Project[] = [
     kind: "Client project · via Beryl Systems · under NDA",
     blurb:
       "Staff scheduling and shift-coverage platform for gyms and fitness chains. Instructors request cover for a shift, managers approve it, and the whole roster stays in sync in realtime across web and mobile.",
-    // The result-focused line. TODO: replace with something measurable you can
-    // actually stand behind — do not guess at numbers.
     outcome:
-      "TODO: one concrete outcome, e.g. 'migrated N screens with zero customer-reported regressions' or 'cut shift-page load from Xs to Ys'.",
+      "Around 120 tickets shipped to date — feature work, QA fixes and migration parity checks — on a platform fitness chains schedule staff with every day.",
     stack: [
       "Next.js 15",
       "React 19",
@@ -190,16 +187,16 @@ export const projects: Project[] = [
     kind: "Client project · via Beryl Systems",
     blurb:
       "Trademark search and filing service. I built server-side automation in Rails that drives the trademark office's online filing system through a headless browser — completing and submitting filings end to end with no operator at a keyboard, across several filing types including new applications, Statements of Use and renewals.",
-    // Derived from what the work actually did. A number would be stronger:
-    // TODO: filings automated per week, hours saved, or error rate before/after.
+    // Deliberately scope-led rather than metric-led: this was dev-side work,
+    // so no customer-facing numbers are known first-hand. Better an accurate
+    // scope claim than an invented statistic.
     outcome:
-      "Replaced per-filing manual form entry with an unattended pipeline covering multiple filing types; contributed roughly a fifth of the platform's codebase.",
-    // TODO: which automation gem — Capybara + Selenium, Watir, Ferrum? And the
-    // database, if you want it listed.
+      "Replaced per-filing manual form entry with an unattended pipeline spanning several filing types; contributed roughly a fifth of the platform's codebase.",
     stack: [
       "Ruby on Rails",
       "Ruby",
-      "Headless browser automation",
+      "Selenium",
+      "Watir",
       "Background jobs",
     ],
     links: [{ label: "Live site", href: "https://trademarks411.com" }],
