@@ -14,6 +14,25 @@ npx tsc --noEmit # typecheck
 npx eslint src   # lint
 ```
 
+## CV
+
+`/resume` renders a printable CV from the same `content.ts` as the site, so the
+two cannot drift. It is `noindex` because it carries a phone number.
+
+`public/chirag-goyal-cv.pdf` is a static print of that page, served by the
+"Download CV" button. **It does not regenerate itself** — after changing
+anything the CV shows, rebuild it:
+
+```bash
+npm run build && npm start          # then, in another shell:
+# open http://localhost:3000/resume and print to PDF (Ctrl/Cmd + P),
+# saving over public/chirag-goyal-cv.pdf
+```
+
+Keep it to one page. It is written light and single-column on purpose: CVs get
+printed and parsed by applicant tracking systems, both of which cope badly with
+dark multi-column layouts.
+
 ## Contact form
 
 `POST /api/contact` validates input, drops honeypot submissions, applies a

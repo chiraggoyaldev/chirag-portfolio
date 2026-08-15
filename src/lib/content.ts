@@ -23,6 +23,11 @@ export const site = {
   // Personal address, matching the GitHub account and this repo's commits.
   email: "chirag.goyal.work@gmail.com",
 
+  // Shown on the CV only, never in the page body. Publishing a number anywhere
+  // crawlable invites scrapers, so /resume is marked noindex — but the PDF in
+  // /public is still fetchable by anyone with the link. Clear `phone` to omit.
+  phone: "+91 8929588326",
+
   socials: {
     github: "https://github.com/chiraggoyaldev",
     linkedin: "https://www.linkedin.com/in/chirag-goyal-a987503a4/",
@@ -33,6 +38,10 @@ export const site = {
   // Update this first if a custom domain is ever added, or search engines will
   // keep pointing at the old one.
   url: "https://chirag-portfolio-ten-beige.vercel.app",
+
+  // Static PDF in /public, printed from the /resume route. Regenerate it after
+  // changing anything the CV shows — see the README.
+  cv: "/chirag-goyal-cv.pdf",
 } as const;
 
 /* --------------------------------------------------------------------------
@@ -60,6 +69,12 @@ export type Job = {
   period: string;
   summary: string;
   highlights: string[];
+  /**
+   * Tighter bullets for the CV. The site can afford to explain; a one-page CV
+   * cannot, and repeating the projects section verbatim wastes the page.
+   * Falls back to `highlights` when absent.
+   */
+  cvHighlights?: string[];
 };
 
 export type ProjectLink = { label: string; href: string };
@@ -81,6 +96,31 @@ export type Project = {
 };
 
 export type Service = { title: string; body: string };
+
+export type Education = {
+  qualification: string;
+  institution: string;
+  period: string;
+};
+
+/* --------------------------------------------------------------------------
+   EDUCATION — CV only.
+   -------------------------------------------------------------------------- */
+
+export const education: Education[] = [
+  {
+    qualification: "B.Tech, Computer Science",
+    institution: "GLA University",
+    period: "2022 — 2026",
+  },
+];
+
+/**
+ * Opening paragraph of the CV. Deliberately shorter and flatter than the
+ * portfolio's `about`, which is written to be read rather than skimmed.
+ */
+export const cvSummary =
+  "Full-stack engineer with 15 months of professional experience across Next.js, React, Ruby on Rails and Python. Currently migrating a live multi-tenant SaaS off a Rails monolith with no cutover window, and fixing the production concurrency faults that surface along the way. Available for freelance work.";
 
 /* --------------------------------------------------------------------------
    SKILLS — only things you'd be comfortable being interviewed on.
@@ -159,6 +199,14 @@ export const experience: Job[] = [
       "Hardened multi-tenant authorization — permission gates, server-side tenancy verification, role-scoped exports, and removal of unguarded legacy write endpoints.",
       "Audited and retired dead API endpoints across the legacy codebase, establishing which routes still carried live traffic before removing them.",
       "Built internal MCP servers connecting the team's development tooling, so project context could be queried directly.",
+    ],
+    cvHighlights: [
+      "Migrating a live multi-tenant SaaS off a Rails monolith onto Next.js — seven settings modules and a six-tab profile area ported while both frontends served production traffic against one database, with no cutover window. ~120 tickets shipped to date.",
+      "Built the coordination that stops two stacks firing the same side effect: ownership flags read by both, plus a database trigger that stands down when the legacy models own a cascade.",
+      "Fixed production concurrency faults — lost updates under parallel event delivery (replaced with a compare-and-swap retry loop), a sync deadlocking itself by holding transactions open across external HTTP calls, and duplicate rows under concurrent submission.",
+      "Hardened multi-tenant authorization: permission gates, server-side tenancy verification, role-scoped CSV export, and removal of unguarded legacy write endpoints.",
+      "Built Rails automation driving a trademark filing system through a headless browser with Selenium and Watir, submitting new applications, Statements of Use and renewals without manual form entry.",
+      "Audited and retired dead API endpoints across the legacy codebase; built internal MCP servers connecting the team's development tooling.",
     ],
   },
 ];

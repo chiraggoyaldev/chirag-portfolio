@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useReducedMotion } from "motion/react";
-import { ArrowDown, Command, Mail } from "lucide-react";
+import { ArrowDown, Command, Download, Mail } from "lucide-react";
 import { Cursor, TerminalWindow } from "./terminal-window";
 import { openPalette } from "@/lib/palette-bus";
 import { site } from "@/lib/content";
@@ -197,6 +197,15 @@ export function Hero() {
           >
             <Mail className="size-4" />
             Get in touch
+          </a>
+
+          <a
+            href={site.cv}
+            download
+            className="inline-flex items-center gap-2 rounded-md px-3 py-2.5 font-sans text-sm text-muted transition-colors duration-200 hover:text-accent"
+          >
+            <Download className="size-4" />
+            Download CV
           </a>
 
           <button

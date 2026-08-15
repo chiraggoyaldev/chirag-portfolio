@@ -2,7 +2,14 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { Command } from "cmdk";
-import { ArrowRight, Check, Copy, Mail } from "lucide-react";
+import {
+  ArrowRight,
+  Check,
+  Copy,
+  Download,
+  FileText,
+  Mail,
+} from "lucide-react";
 import { GithubIcon, LinkedinIcon, XIcon } from "./icons";
 import { sections } from "@/lib/sections";
 import { site } from "@/lib/content";
@@ -106,6 +113,40 @@ export function CommandPalette() {
               <span className="ml-auto text-xs text-dim">{s.index}</span>
             </Command.Item>
           ))}
+        </Command.Group>
+
+        <Command.Group
+          heading="CV"
+          className="[&_[cmdk-group-heading]]:label [&_[cmdk-group-heading]]:px-3 [&_[cmdk-group-heading]]:py-2 [&_[cmdk-group-heading]]:text-dim"
+        >
+          <Command.Item
+            value="download cv resume pdf"
+            onSelect={() =>
+              run(() => {
+                const a = document.createElement("a");
+                a.href = site.cv;
+                a.download = "";
+                a.click();
+              })
+            }
+            className="flex cursor-pointer items-center gap-3 rounded-md px-3 py-2.5 font-mono text-sm text-muted data-[selected=true]:bg-surface-2 data-[selected=true]:text-text"
+          >
+            <Download className="size-4 shrink-0 text-dim" />
+            Download CV (PDF)
+          </Command.Item>
+
+          <Command.Item
+            value="view cv resume online browser"
+            onSelect={() =>
+              run(() => {
+                window.open("/resume", "_blank", "noopener,noreferrer");
+              })
+            }
+            className="flex cursor-pointer items-center gap-3 rounded-md px-3 py-2.5 font-mono text-sm text-muted data-[selected=true]:bg-surface-2 data-[selected=true]:text-text"
+          >
+            <FileText className="size-4 shrink-0 text-dim" />
+            View CV in browser
+          </Command.Item>
         </Command.Group>
 
         <Command.Group

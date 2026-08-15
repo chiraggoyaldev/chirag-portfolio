@@ -2,10 +2,6 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { site } from "@/lib/content";
-import { Nav } from "@/components/nav";
-import { Footer } from "@/components/footer";
-import { CommandPalette } from "@/components/command-palette";
-import { ConsoleSignature } from "@/components/console-signature";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -75,18 +71,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <noscript>
           <style>{`[data-reveal]{opacity:1!important;transform:none!important}`}</style>
         </noscript>
-        <a
-          href="#about"
-          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:rounded-md focus:bg-surface focus:px-4 focus:py-2 focus:text-sm focus:text-accent"
-        >
-          Skip to content
-        </a>
-        <span id="top" />
-        <Nav />
-        <main className="flex-1">{children}</main>
-        <Footer />
-        <CommandPalette />
-        <ConsoleSignature />
+        {children}
       </body>
     </html>
   );
