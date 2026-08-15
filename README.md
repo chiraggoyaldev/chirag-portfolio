@@ -14,6 +14,25 @@ npx tsc --noEmit # typecheck
 npx eslint src   # lint
 ```
 
+## Contact form
+
+`POST /api/contact` validates input, drops honeypot submissions, applies a
+best-effort per-IP rate limit and sends through [Resend](https://resend.com).
+
+Setup:
+
+1. Create a Resend account **using the address you want messages delivered to**.
+2. Generate an API key at <https://resend.com/api-keys>.
+3. Add `RESEND_API_KEY` in Vercel → Settings → Environment Variables, and to
+   `.env.local` for local work. See `.env.example`.
+
+Until a domain is verified, mail is sent from Resend's shared test sender,
+which may only deliver to the account owner's address — fine here, since the
+form only ever mails the site owner. Verifying a domain lifts that limit.
+
+With no API key set, the endpoint returns 503 and the UI tells the visitor to
+use the email address shown below the form. It never fails silently.
+
 ## Editing content
 
 All copy lives in **`src/lib/content.ts`** — name, tagline, skills, experience,

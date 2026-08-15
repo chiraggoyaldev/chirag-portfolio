@@ -5,6 +5,7 @@ import { sections } from "@/lib/sections";
 import { Section } from "../section";
 import { Reveal } from "../reveal";
 import { CopyEmail } from "../copy-email";
+import { ContactForm } from "../contact-form";
 
 const meta = sections.find((s) => s.id === "contact")!;
 
@@ -25,10 +26,19 @@ export function Contact() {
             message and reply within a day or two.
           </p>
 
-          <div className="mt-8 flex flex-wrap items-center gap-3">
+          <div className="mt-8">
+            <ContactForm />
+          </div>
+
+          <span aria-hidden className="mt-8 block h-px bg-border" />
+
+          <p className="mt-6 mb-4 text-sm text-dim">
+            Prefer your own mail client?
+          </p>
+          <div className="flex flex-wrap items-center gap-3">
             <a
               href={`mailto:${site.email}`}
-              className="inline-flex items-center gap-2 rounded-md border border-accent/30 bg-accent/10 px-4 py-2.5 text-sm font-medium text-accent transition-colors duration-200 hover:border-accent/60 hover:bg-accent/20"
+              className="inline-flex items-center gap-2 rounded-md border border-border-hi bg-surface-2 px-4 py-2.5 text-sm font-medium text-text transition-colors duration-200 hover:border-dim"
             >
               <Mail className="size-4" />
               {site.email}
