@@ -18,7 +18,7 @@ export function Projects() {
                   {project.name}
                 </h3>
                 <p className="label flex items-center gap-1.5 text-dim">
-                  {project.links.length === 0 && (
+                  {project.confidential && (
                     <Lock aria-hidden className="size-3" />
                   )}
                   {project.kind}

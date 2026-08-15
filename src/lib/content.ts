@@ -73,6 +73,11 @@ export type Project = {
   highlights?: string[];
   stack: string[];
   links: ProjectLink[];
+  /**
+   * Source is private. Drives the lock badge — kept separate from `links`,
+   * since a product can have a public marketing site while its code stays shut.
+   */
+  confidential?: boolean;
 };
 
 export type Service = { title: string; body: string };
@@ -204,8 +209,9 @@ export const projects: Project[] = [
       "AWS",
       "Ably",
     ],
-    // Deliberately no links — private repository.
-    links: [],
+    links: [{ label: "netgym.com", href: "https://netgym.com/" }],
+    // Product is publicly launched; the source is not.
+    confidential: true,
   },
   {
     name: "trademarks411.com",
