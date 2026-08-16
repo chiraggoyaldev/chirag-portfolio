@@ -81,9 +81,10 @@ export default function ResumePage() {
           /* Screen spacing runs ~30px over a single A4 page. Tighten the
              rhythm for print rather than cutting content — measured, not
              guessed; see the note in the README about re-checking this. */
-          .cv-sheet section { margin-top: .78rem; }
-          .cv-summary { margin-top: 1rem; }
-          .cv-h2 { margin-bottom: .6rem; }
+          .cv-sheet section { margin-top: .62rem; }
+          .cv-summary { margin-top: .85rem; }
+          .cv-h2 { margin-bottom: .45rem; padding-bottom: .22rem; }
+          .cv-entry { margin-bottom: .7rem; }
         }
       `}</style>
 
