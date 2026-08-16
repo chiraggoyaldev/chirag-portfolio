@@ -54,7 +54,17 @@ export default function ResumePage() {
   return (
     <div className="cv-root min-h-screen bg-white print:min-h-0">
       <style>{`
-        /* Scoped to this route: the global stylesheet is built for a dark site. */
+        /* Scoped to this route: the global stylesheet is built for a dark site.
+           Its color-scheme:dark makes the browser paint its OWN dark canvas
+           (#121212) behind the page. That is not a background, so no CSS
+           background rule covers it, and it printed as a heavy black border
+           around the whole CV. Resetting the colour scheme is the real fix;
+           the background rules below are belt-and-braces.
+           (Keep backticks out of this comment — it lives in a template
+           literal, and one will silently end the string.) */
+        html { color-scheme: light !important; }
+        html, body { background: #fff !important; }
+
         .cv-root { font-family: var(--font-sans), system-ui, sans-serif; color: ${BODY}; }
         .cv-sheet { max-width: 47rem; margin: 0 auto; padding: 3rem 2.75rem 3.5rem; }
 
@@ -70,8 +80,14 @@ export default function ResumePage() {
         .cv-link { color: ${BODY}; text-decoration: none; border-bottom: 1px solid ${RULE}; }
         .cv-link:hover { color: ${INK}; border-bottom-color: ${SOFT}; }
 
+        /* Browsers printing from the UI honour this. Chrome's headless PDF
+           engine does NOT — margins must be passed to the print call, which
+           the PDF generation script does. Both paths need covering. */
         @page { size: A4; margin: 14mm 13mm; }
+
         @media print {
+          html, body { background: #fff !important; }
+          .cv-root { background: #fff !important; }
           .cv-sheet { max-width: none; margin: 0; padding: 0; }
           .cv-no-print { display: none !important; }
           .cv-entry { break-inside: avoid; page-break-inside: avoid; }
@@ -81,10 +97,10 @@ export default function ResumePage() {
           /* Screen spacing runs ~30px over a single A4 page. Tighten the
              rhythm for print rather than cutting content — measured, not
              guessed; see the note in the README about re-checking this. */
-          .cv-sheet section { margin-top: .62rem; }
-          .cv-summary { margin-top: .85rem; }
-          .cv-h2 { margin-bottom: .45rem; padding-bottom: .22rem; }
-          .cv-entry { margin-bottom: .7rem; }
+          .cv-sheet section { margin-top: .88rem; }
+          .cv-summary { margin-top: 1rem; }
+          .cv-h2 { margin-bottom: .55rem; padding-bottom: .26rem; }
+          .cv-entry { margin-bottom: .78rem; }
         }
       `}</style>
 

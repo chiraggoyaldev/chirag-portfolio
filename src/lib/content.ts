@@ -120,7 +120,7 @@ export const education: Education[] = [
  * portfolio's `about`, which is written to be read rather than skimmed.
  */
 export const cvSummary =
-  "Full-stack engineer with 15 months' professional experience across Next.js, React, Ruby on Rails and Python. I work on what decides whether software holds up in production: migrating live systems incrementally, fixing concurrency and data-integrity faults, and automating work people were doing by hand. Available for freelance work.";
+  "Full-stack engineer with 15 months' professional experience across Next.js, React, Rails and Python. I work on what decides whether software holds up in production: migrating live systems incrementally, fixing concurrency faults, and automating work done by hand. Available for freelance work.";
 
 /* --------------------------------------------------------------------------
    SKILLS — only things you'd be comfortable being interviewed on.
