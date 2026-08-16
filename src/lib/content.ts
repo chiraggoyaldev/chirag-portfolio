@@ -120,7 +120,7 @@ export const education: Education[] = [
  * portfolio's `about`, which is written to be read rather than skimmed.
  */
 export const cvSummary =
-  "Full-stack engineer with 15 months of professional experience across Next.js, React, Ruby on Rails and Python. Currently migrating a live multi-tenant SaaS off a Rails monolith with no cutover window, and fixing the production concurrency faults that surface along the way. Available for freelance work.";
+  "Full-stack engineer with 15 months of professional experience across Next.js, React, Ruby on Rails and Python. I work on the parts that decide whether software holds up in production: incremental migrations of live systems, concurrency and data-integrity faults, multi-tenant authorization, and automation of processes people were doing by hand. Available for freelance work.";
 
 /* --------------------------------------------------------------------------
    SKILLS — only things you'd be comfortable being interviewed on.
@@ -171,6 +171,7 @@ export const skills: SkillGroup[] = [
     items: [
       "Legacy migration",
       "Browser automation (Selenium / Watir)",
+      "AI feature integration",
       "Realtime (WebSockets / Ably)",
       "Observability",
       "Git / code review",
@@ -192,7 +193,7 @@ export const experience: Job[] = [
       "Full-stack delivery on client platforms — a staff-scheduling product for fitness chains, and a trademark filing service.",
     highlights: [
       "Joined through a structured training period, then moved onto client delivery.",
-      "Five months on trademarks411.com, where I built Rails automation driving the trademark office's filing system through a headless browser with Selenium and Watir — submitting new applications, Statements of Use and renewals without manual form entry. Contributed roughly a fifth of that codebase.",
+      "Five months on trademarks411.com, where I built Rails automation driving the trademark office's filing system through a headless browser with Selenium and Watir — carrying an application from first form to payment, screenshotting each step for an audit trail, and adding AI-assisted fields that read uploaded specimen images to draft the required wording. Contributed roughly a fifth of that codebase.",
       "Six months (current) on NetGym, a multi-tenant scheduling platform for gym chains — working across a Next.js frontend, a Rails monolith, a GraphQL layer and Python serverless functions on AWS.",
       "Migrated seven settings modules and a six-tab profile area off the Rails monolith onto Next.js while both frontends served live traffic against a single database, with no cutover window — including the coordination that stops two stacks firing the same side effect.",
       "Debugged and fixed production concurrency faults: lost updates under parallel event delivery, a sync deadlocking itself by holding transactions open across external HTTP calls, and duplicate rows under concurrent submission.",
@@ -201,11 +202,11 @@ export const experience: Job[] = [
       "Built internal MCP servers connecting the team's development tooling, so project context could be queried directly.",
     ],
     cvHighlights: [
-      "Migrating a live multi-tenant SaaS off a Rails monolith onto Next.js — seven settings modules and a six-tab profile area ported while both frontends served production traffic against one database, with no cutover window. ~120 tickets shipped to date.",
+      "Migrated a live multi-tenant SaaS off a Rails monolith onto Next.js — seven settings modules and a six-tab profile area ported while both frontends served production traffic against one database, with no cutover window. ~120 tickets shipped to date.",
       "Built the coordination that stops two stacks firing the same side effect: ownership flags read by both, plus a database trigger that stands down when the legacy models own a cascade.",
       "Fixed production concurrency faults — lost updates under parallel event delivery (replaced with a compare-and-swap retry loop), a sync deadlocking itself by holding transactions open across external HTTP calls, and duplicate rows under concurrent submission.",
       "Hardened multi-tenant authorization: permission gates, server-side tenancy verification, role-scoped CSV export, and removal of unguarded legacy write endpoints.",
-      "Built Rails automation driving a trademark filing system through a headless browser with Selenium and Watir, submitting new applications, Statements of Use and renewals without manual form entry.",
+      "Automated trademark filing end to end in Rails — a headless browser (Selenium, Watir) carrying an application from first form to payment, screenshotting each step for an audit trail — and added AI-assisted fields that read uploaded specimen images to draft the required wording.",
       "Audited and retired dead API endpoints across the legacy codebase; built internal MCP servers connecting the team's development tooling.",
     ],
   },
@@ -265,17 +266,27 @@ export const projects: Project[] = [
     name: "trademarks411.com",
     kind: "Client project · via Beryl Systems",
     blurb:
-      "Trademark search and filing service. I built server-side automation in Rails that drives the trademark office's online filing system through a headless browser — completing and submitting filings end to end with no operator at a keyboard, across several filing types including new applications, Statements of Use and renewals.",
+      "Trademark search and filing service. I built Rails automation that drives the trademark office's online filing system through a headless browser, carrying an application from the first form through to payment with no operator at a keyboard — and added AI-assisted fields that read an applicant's uploaded specimen images and draft the wording they would otherwise write from scratch.",
     // Deliberately scope-led rather than metric-led: this was dev-side work,
     // so no customer-facing numbers are known first-hand. Better an accurate
     // scope claim than an invented statistic.
     outcome:
-      "Replaced per-filing manual form entry with an unattended pipeline spanning several filing types; contributed roughly a fifth of the platform's codebase.",
+      "Took filing from manual form entry to an unattended pipeline that completes a submission end to end and leaves a screenshot audit trail; contributed roughly a fifth of the platform's codebase.",
+    highlights: [
+      "Automated the full filing path — form completion through payment — across several filing types including new applications, Statements of Use and renewals.",
+      "Captured a screenshot at each step of an automated filing, deliberately excluding payment pages, so every submission leaves a reviewable record of what was actually entered.",
+      "Added AI-assisted inputs that analyse uploaded specimen images and draft the descriptive wording an application requires, cutting the hardest part of the form down to a review step.",
+      "Built the admin interface for those records, including the modal viewer for stepping through a filing's captured screenshots.",
+    ],
     stack: [
       "Ruby on Rails",
       "Ruby",
       "Selenium",
       "Watir",
+      // TODO(chirag): which model/provider powered the AI fields? Naming it
+      // (OpenAI, Claude, a vision API) is worth more to a technical reader
+      // than the generic label.
+      "LLM / image analysis",
       "Background jobs",
     ],
     links: [{ label: "Live site", href: "https://trademarks411.com" }],

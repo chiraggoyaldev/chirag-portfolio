@@ -16,6 +16,9 @@ import {
  * matching the site's dark terminal look: CVs get printed, and get parsed by
  * applicant tracking systems that cope badly with multi-column layouts and
  * inverted colour. Personality belongs on the site; this is a document.
+ *
+ * Every contact detail is a real link. A PDF keeps them clickable, and a
+ * recruiter reading on screen should be one click from the portfolio.
  */
 
 export const metadata: Metadata = {
@@ -24,74 +27,123 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-const contactLine = [
-  site.email,
-  site.phone,
-  site.location,
-  site.url.replace(/^https?:\/\//, ""),
-].filter(Boolean);
+const INK = "#15171a";
+const BODY = "#33383d";
+const SOFT = "#6b7280";
+const RULE = "#d8dbdf";
+
+function tidy(url: string) {
+  return url.replace(/^https?:\/\/(www\.)?/, "").replace(/\/$/, "");
+}
 
 export default function ResumePage() {
+  const contacts: Array<{ label: string; href: string }> = [
+    { label: site.email, href: `mailto:${site.email}` },
+    // Conditional spreads rather than filter+predicate: `site` is `as const`,
+    // so its literal types make a type guard here more trouble than it's worth.
+    ...(site.phone
+      ? [{ label: site.phone, href: `tel:${site.phone.replace(/\s+/g, "")}` }]
+      : []),
+    { label: tidy(site.url), href: site.url },
+    { label: tidy(site.socials.github), href: site.socials.github },
+    ...(site.socials.linkedin
+      ? [{ label: tidy(site.socials.linkedin), href: site.socials.linkedin }]
+      : []),
+  ];
+
   return (
-    <div className="cv-root min-h-screen bg-white text-[#111] print:min-h-0">
+    <div className="cv-root min-h-screen bg-white print:min-h-0">
       <style>{`
         /* Scoped to this route: the global stylesheet is built for a dark site. */
-        .cv-root { font-family: var(--font-sans), system-ui, sans-serif; }
-        .cv-sheet { max-width: 46rem; margin: 0 auto; padding: 2.75rem 2.5rem 3rem; }
-        .cv-rule { border-bottom: 1.5px solid #111; padding-bottom: .25rem; margin-bottom: .85rem; }
-        @page { size: A4; margin: 13mm 12mm; }
+        .cv-root { font-family: var(--font-sans), system-ui, sans-serif; color: ${BODY}; }
+        .cv-sheet { max-width: 47rem; margin: 0 auto; padding: 3rem 2.75rem 3.5rem; }
+
+        /* Section headings: a hairline in a soft grey, not a slab of black.
+           The weight comes from the letterspaced caps, not from the rule. */
+        .cv-h2 {
+          font-size: .7rem; font-weight: 700; letter-spacing: .14em;
+          text-transform: uppercase; color: ${SOFT};
+          padding-bottom: .3rem; margin-bottom: .8rem;
+          border-bottom: 1px solid ${RULE};
+        }
+
+        .cv-link { color: ${BODY}; text-decoration: none; border-bottom: 1px solid ${RULE}; }
+        .cv-link:hover { color: ${INK}; border-bottom-color: ${SOFT}; }
+
+        @page { size: A4; margin: 14mm 13mm; }
         @media print {
           .cv-sheet { max-width: none; margin: 0; padding: 0; }
           .cv-no-print { display: none !important; }
-          /* Never split an entry across a page break. */
           .cv-entry { break-inside: avoid; page-break-inside: avoid; }
-          a { text-decoration: none; color: #111; }
+          /* Keep links functional in the PDF but visually quiet on paper. */
+          .cv-link { border-bottom: none; color: ${BODY}; }
+
+          /* Screen spacing runs ~30px over a single A4 page. Tighten the
+             rhythm for print rather than cutting content — measured, not
+             guessed; see the note in the README about re-checking this. */
+          .cv-sheet section { margin-top: .78rem; }
+          .cv-summary { margin-top: 1rem; }
+          .cv-h2 { margin-bottom: .6rem; }
         }
       `}</style>
 
       <div className="cv-sheet">
         {/* ---- header ---- */}
         <header>
-          <h1 className="text-[1.85rem] leading-tight font-bold tracking-tight">
+          <h1
+            className="text-[2rem] leading-none font-bold tracking-tight"
+            style={{ color: INK }}
+          >
             {site.name}
           </h1>
-          <p className="mt-0.5 text-[1.02rem] text-[#333]">{site.role}</p>
-          <p className="mt-2 text-[0.82rem] text-[#444]">
-            {contactLine.join("  ·  ")}
+          <p className="mt-1.5 text-[1.05rem]" style={{ color: BODY }}>
+            {site.role}
+            <span style={{ color: SOFT }}> · {site.location}</span>
           </p>
-          <p className="text-[0.82rem] text-[#444]">
-            {site.socials.github.replace(/^https?:\/\//, "")}
-            {site.socials.linkedin
-              ? `  ·  ${site.socials.linkedin.replace(/^https?:\/\/(www\.)?/, "").replace(/\/$/, "")}`
-              : ""}
+
+          <p className="mt-3 text-[0.83rem] leading-relaxed">
+            {contacts.map((c, i) => (
+              <span key={c.href}>
+                {i > 0 && <span style={{ color: RULE }}> · </span>}
+                <a className="cv-link" href={c.href}>
+                  {c.label}
+                </a>
+              </span>
+            ))}
           </p>
         </header>
 
         {/* ---- summary ---- */}
-        <section className="mt-6">
-          <p className="text-[0.9rem] leading-relaxed text-[#222]">
-            {cvSummary}
-          </p>
-        </section>
+        <p
+          className="cv-summary mt-6 text-[0.9rem] leading-relaxed"
+          style={{ color: BODY }}
+        >
+          {cvSummary}
+        </p>
 
         {/* ---- experience ---- */}
         <Section title="Experience">
           {experience.map((job) => (
             <div key={job.company} className="cv-entry mb-4 last:mb-0">
               <div className="flex flex-wrap items-baseline justify-between gap-x-4">
-                <h3 className="text-[0.98rem] font-semibold">
+                <h3
+                  className="text-[0.97rem] font-semibold"
+                  style={{ color: INK }}
+                >
                   {job.role} — {job.company}
                 </h3>
-                <span className="text-[0.8rem] text-[#555]">{job.period}</span>
+                <span className="text-[0.79rem]" style={{ color: SOFT }}>
+                  {job.period}
+                </span>
               </div>
-              <ul className="mt-1.5 space-y-1">
+              <ul className="mt-1.5 space-y-[0.3rem]">
                 {(job.cvHighlights ?? job.highlights).map((h) => (
                   <li
                     key={h.slice(0, 28)}
-                    className="flex gap-2 text-[0.86rem] leading-snug text-[#222]"
+                    className="flex gap-2 text-[0.855rem] leading-[1.45]"
                   >
-                    <span aria-hidden className="text-[#666]">
-                      •
+                    <span aria-hidden style={{ color: RULE }}>
+                      ▪
                     </span>
                     <span>{h}</span>
                   </li>
@@ -106,28 +158,44 @@ export default function ResumePage() {
              Experience bullets above; repeating it here would cost half a page
              to say the same thing twice. */}
         <Section title="Client projects">
-          {projects.map((p) => (
-            <div key={p.name} className="cv-entry mb-1.5 last:mb-0">
-              <p className="text-[0.88rem]">
-                <span className="font-semibold">{p.name}</span>
-                <span className="text-[#666]"> — {p.kind}</span>
-              </p>
-              {p.stack.length > 0 && (
-                <p className="text-[0.8rem] leading-snug text-[#555]">
-                  {p.stack.join(" · ")}
+          {projects.map((p) => {
+            const link = p.links[0];
+            return (
+              <div key={p.name} className="cv-entry mb-2 last:mb-0">
+                <p className="text-[0.88rem]">
+                  <span className="font-semibold" style={{ color: INK }}>
+                    {link ? (
+                      <a className="cv-link" href={link.href}>
+                        {p.name}
+                      </a>
+                    ) : (
+                      p.name
+                    )}
+                  </span>
+                  <span style={{ color: SOFT }}> — {p.kind}</span>
                 </p>
-              )}
-            </div>
-          ))}
+                {p.stack.length > 0 && (
+                  <p
+                    className="text-[0.79rem] leading-snug"
+                    style={{ color: SOFT }}
+                  >
+                    {p.stack.join(" · ")}
+                  </p>
+                )}
+              </div>
+            );
+          })}
         </Section>
 
         {/* ---- skills ---- */}
         <Section title="Skills">
-          <ul className="space-y-1">
+          <ul className="space-y-[0.28rem]">
             {skills.map((group) => (
-              <li key={group.group} className="text-[0.86rem] leading-snug">
-                <span className="font-semibold">{group.group}: </span>
-                <span className="text-[#222]">{group.items.join(", ")}</span>
+              <li key={group.group} className="text-[0.855rem] leading-snug">
+                <span className="font-semibold" style={{ color: INK }}>
+                  {group.group}:{" "}
+                </span>
+                {group.items.join(", ")}
               </li>
             ))}
           </ul>
@@ -140,17 +208,24 @@ export default function ResumePage() {
               key={e.institution}
               className="cv-entry flex flex-wrap items-baseline justify-between gap-x-4"
             >
-              <p className="text-[0.9rem]">
-                <span className="font-semibold">{e.qualification}</span>
+              <p className="text-[0.89rem]">
+                <span className="font-semibold" style={{ color: INK }}>
+                  {e.qualification}
+                </span>
                 {", "}
                 {e.institution}
               </p>
-              <span className="text-[0.8rem] text-[#555]">{e.period}</span>
+              <span className="text-[0.79rem]" style={{ color: SOFT }}>
+                {e.period}
+              </span>
             </div>
           ))}
         </Section>
 
-        <p className="cv-no-print mt-10 text-center text-[0.8rem] text-[#777]">
+        <p
+          className="cv-no-print mt-10 text-center text-[0.8rem]"
+          style={{ color: SOFT }}
+        >
           Print this page (Ctrl/Cmd + P) to save it as a PDF.
         </p>
       </div>
@@ -167,9 +242,7 @@ function Section({
 }) {
   return (
     <section className="mt-5">
-      <h2 className="cv-rule text-[0.76rem] font-bold tracking-[0.11em] uppercase">
-        {title}
-      </h2>
+      <h2 className="cv-h2">{title}</h2>
       {children}
     </section>
   );
